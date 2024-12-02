@@ -1,0 +1,8 @@
+graph {
+    "Animal" [label="Danceability: 0.48, Energy: 0.83, Tempo: 147.99, Valence: 0.74, Popularity: 66"];
+    "Animal" -> "The Nights" [label="Danceability: 0.53, Energy: 0.83, Popularity: 86"];
+    "Animal" -> "Prom Queen" [label="Danceability: 0.53, Energy: 0.80, Popularity: 82"];
+    "Animal" -> "Summer Of '69" [label="Danceability: 0.51, Energy: 0.83, Popularity: 82"];
+    "Animal" -> "Boys Don't Cry" [label="Danceability: 0.46, Energy: 0.84, Popularity: 77"];
+    "Animal" -> "Self Esteem" [label="Danceability: 0.49, Energy: 0.86, Popularity: 77"];
+}
