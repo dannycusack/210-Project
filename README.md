@@ -48,13 +48,16 @@ The main function is used to load the dataset, ask for a song name, find the top
 
 Example output:
 Loaded 114000 tracks from the dataset.
+
 Enter the name of a song:
-Animal    
+Animal 
+
 Multiple matches found. Please select one of the top 3 most popular songs:
 1: "Animal" by Neon Trees (Album: Habits (Spotify), Popularity: 66)
 2: "Animal" by Def Leppard (Album: Hysteria, Popularity: 64)
 3: "Animal" by Vicetone;Jordan Powers;Bekah Novi (Album: Legacy, Popularity: 58)
 Enter the number of the correct song: 1
+
 Top 5 similar songs to "Animal" by Neon Trees [Danceability: 0.48, Energy: 0.83, Tempo: 147.99, Valence: 0.74, Popularity: 66]:
   -> "The Nights" by Avicii [Danceability: 0.53, Energy: 0.83, Tempo: 125.98, Valence: 0.65, Popularity: 86]
   -> "Prom Queen" by Beach Bunny [Danceability: 0.53, Energy: 0.80, Tempo: 143.79, Valence: 0.75, Popularity: 82]
