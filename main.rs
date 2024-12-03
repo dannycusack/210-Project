@@ -4,19 +4,6 @@ use std::error::Error;
 use std::fs::File;
 use std::io::{stdin, Write};
 use csv::ReaderBuilder;
-use serde::de::{self, Deserializer};
-
-fn parse_bool_from_string<'de, D>(deserializer: D) -> Result<bool, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let s: String = Deserialize::deserialize(deserializer)?;
-    match s.to_lowercase().as_str() {
-        "true" | "yes" | "1" => Ok(true),
-        "false" | "no" | "0" => Ok(false),
-        _ => Err(de::Error::custom(format!("Invalid boolean value: {}", s))),
-    }
-}
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 struct Track {
@@ -25,19 +12,12 @@ struct Track {
     album_name: String,
     track_name: String,
     popularity: u32,
-    duration_ms: u32,
-    #[serde(deserialize_with = "parse_bool_from_string")]
-    explicit: bool,
+    //#[serde(deserialize_with = "parse_bool_from_string")]
+    //explicit: bool,
     danceability: f32,
     energy: f32,
     tempo: f32,
     valence: f32,
-    key: u32,
-    loudness: f32,
-    mode: u32,
-    acousticness: f32,
-    instrumentalness: f32,
-    liveness: f32,
 }
 
 fn load_tracks_from_csv(file_path: &str) -> Result<Vec<Track>, Box<dyn Error>> {
