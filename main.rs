@@ -40,7 +40,6 @@ struct Track {
     liveness: f32,
 }
 
-// Function to load tracks from a CSV file
 fn load_tracks_from_csv(file_path: &str) -> Result<Vec<Track>, Box<dyn Error>> {
     let mut rdr = ReaderBuilder::new().has_headers(true).from_path(file_path)?;
     let mut tracks = Vec::new();
@@ -51,13 +50,9 @@ fn load_tracks_from_csv(file_path: &str) -> Result<Vec<Track>, Box<dyn Error>> {
     Ok(tracks)
 }
 
-// Function to handle multiple matches and allow user to select one
 fn select_track<'a>(tracks: &'a [&'a Track]) -> Option<&'a Track> {
-    // Sort tracks by popularity in descending order
     let mut sorted_tracks = tracks.to_vec();
     sorted_tracks.sort_by(|a, b| b.popularity.cmp(&a.popularity));
-
-    // Limit to the top 3 tracks
     let top_tracks = sorted_tracks.iter().take(3).collect::<Vec<_>>();
 
     println!("Multiple matches found. Please select one of the top 3 most popular songs:");
@@ -88,7 +83,6 @@ fn select_track<'a>(tracks: &'a [&'a Track]) -> Option<&'a Track> {
     }
 }
 
-// Function to find songs similar to a given input song
 fn find_similar_songs<'a>(
     tracks: &'a [Track],
     input_track: &Track,
@@ -120,7 +114,6 @@ fn find_similar_songs<'a>(
     similar_songs
 }
 
-// Function to display a clean graph
 fn display_clean_subgraph(input_track: &Track, similar_songs: &[&Track]) {
     println!(
         "Top 5 similar songs to \"{}\" by {} [Danceability: {:.2}, Energy: {:.2}, Tempo: {:.2}, Valence: {:.2}, Popularity: {}]:",
@@ -146,14 +139,11 @@ fn display_clean_subgraph(input_track: &Track, similar_songs: &[&Track]) {
     }
 }
 
-// Function to build the graph for the input song and similar songs
 fn build_song_subgraph<'a>(
     input_track: &'a Track,
     similar_songs: &[&'a Track],
 ) -> HashMap<String, (String, Vec<(String, f32, f32, u32)>)> {
     let mut graph = HashMap::new();
-
-    // Add the input song as the central node
     graph.insert(
         input_track.track_name.clone(),
         (
@@ -178,19 +168,15 @@ fn build_song_subgraph<'a>(
                 .collect(),
         ),
     );
-
     graph
 }
 
-// Function to export the graph to a DOT file
 fn export_subgraph_to_dot(
     graph: &HashMap<String, (String, Vec<(String, f32, f32, u32)>)>,
     file_path: &str,
 ) -> std::io::Result<()> {
     let mut file = File::create(file_path)?;
-
     writeln!(file, "graph {{")?;
-
     for (node, (details, neighbors)) in graph {
         writeln!(file, "    \"{}\" [label=\"{}\"];", node, details)?;
         for (neighbor, danceability, energy, popularity) in neighbors {
@@ -201,42 +187,33 @@ fn export_subgraph_to_dot(
             )?;
         }
     }
-
     writeln!(file, "}}")?;
     Ok(())
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-    // Set the path to your CSV dataset
     let file_path = "spotify.csv"; // Replace with the correct path
     let tracks = load_tracks_from_csv(file_path)?;
     println!("Loaded {} tracks from the dataset.", tracks.len());
-
-    // Set thresholds
     let danceability_threshold = 0.05;
     let energy_threshold = 0.05;
     let tempo_threshold = 50.0;
     let valence_threshold = 0.1;
     let popularity_threshold = 70;
-
-    // Ask the user for a song name
     println!("Enter the name of a song:");
     let mut input_song = String::new();
     stdin().read_line(&mut input_song)?;
     let input_song = input_song.trim();
 
-    // Find all tracks with the input name
     let matching_tracks: Vec<_> = tracks
         .iter()
         .filter(|t| t.track_name.eq_ignore_ascii_case(input_song))
         .collect();
-
     if matching_tracks.is_empty() {
         println!("No song found with the name '{}'.", input_song);
         return Ok(());
     }
 
-    // If multiple matches are found, show top 3 by popularity and let the user select one
     let selected_track = if matching_tracks.len() > 1 {
         select_track(&matching_tracks)
     } else {
@@ -244,7 +221,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     };
 
     if let Some(input_track) = selected_track {
-        // Find similar songs
         let similar_songs = find_similar_songs(
             &tracks,
             input_track,
@@ -254,18 +230,12 @@ fn main() -> Result<(), Box<dyn Error>> {
             valence_threshold,
             popularity_threshold,
         );
-
-        // Remove duplicates and limit to top 5 similar songs
         let top_similar_songs = similar_songs.iter().take(5).cloned().collect::<Vec<_>>();
-
-        // Display the cleaned-up graph
         display_clean_subgraph(input_track, &top_similar_songs);
 
-        // Export to DOT file
         let dot_file_path = "graph.dot";
         export_subgraph_to_dot(&build_song_subgraph(input_track, &top_similar_songs), dot_file_path)?;
         println!("Graph exported to '{}'.", dot_file_path);
     }
-
     Ok(())
 }
