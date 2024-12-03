@@ -12,8 +12,6 @@ struct Track {
     album_name: String,
     track_name: String,
     popularity: u32,
-    //#[serde(deserialize_with = "parse_bool_from_string")]
-    //explicit: bool,
     danceability: f32,
     energy: f32,
     tempo: f32,
