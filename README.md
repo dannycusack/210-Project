@@ -22,14 +22,9 @@ Stdin reads the user input
 Write writes to files and the console
 use csv::ReaderBuilder;
 This allows the CSV reader to handle the columns and rows to the Track struct
-use serde::de::{self, Deserializer};
-This used custom deserialization of boolean values in the Track struct.
 
 
 I used different functions to perform the project:
-Parse_bool_from_string
-This uses serde’s deserialization to parse a string
-This matches boolean representation to true and false
 Load_tracks_from_csv
 This uses the csv crate to read the file and map each row in the CSV to the Track struct
 Select_track
