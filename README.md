@@ -24,7 +24,7 @@ use csv::ReaderBuilder;
 This allows the CSV reader to handle the columns and rows to the Track struct
 
 
-I used different functions to perform the project:
+I used tested different functions to very the correctness of the project:
 Load_tracks_from_csv
 This uses the csv crate to read the file and map each row in the CSV to the Track struct
 Select_track
@@ -42,6 +42,7 @@ The main function is used to load the dataset, ask for a song name, find the top
 
 
 Example output:
+CARGO RUN
 Loaded 114000 tracks from the dataset.
 
 Enter the name of a song:
@@ -61,7 +62,7 @@ Top 5 similar songs to "Animal" by Neon Trees [Danceability: 0.48, Energy: 0.83,
   -> "Self Esteem" by The Offspring [Danceability: 0.49, Energy: 0.86, Tempo: 104.56, Valence: 0.71, Popularity: 77]
 Graph exported to 'graph.dot'.
 
-
+GRAPH
 Graph.dot:
 graph {
     "Animal" [label="Danceability: 0.48, Energy: 0.83, Tempo: 147.99, Valence: 0.74, Popularity: 66"];
@@ -72,6 +73,15 @@ graph {
     "Animal" -> "Self Esteem" [label="Danceability: 0.49, Energy: 0.86, Popularity: 77"];
 }
 
+CARGO TEST
+running 5 tests
+test tests::tests::test_find_similar_songs ... ok
+test tests::tests::test_build_song_subgraph ... ok
+test tests::tests::test_select_track ... ok
+test tests::tests::test_export_subgraph_to_dot ... ok
+test tests::tests::test_load_tracks_from_csv ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 
 
