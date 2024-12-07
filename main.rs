@@ -172,7 +172,7 @@ fn export_subgraph_to_dot(
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let file_path = "spotify.csv"; // Replace with the correct path
+    let file_path = "spotify.csv";
     let tracks = load_tracks_from_csv(file_path)?;
     println!("Loaded {} tracks from the dataset.", tracks.len());
     let danceability_threshold = 0.05;

@@ -36,7 +36,6 @@ pub fn select_track<'a>(tracks: &'a [&'a Track], user_input: Option<usize>) -> O
             return Some(top_tracks[input - 1]);
         }
     }
-
     println!("Multiple matches found. Please select one of the top 3 most popular songs:");
     for (index, track) in top_tracks.iter().enumerate() {
         println!(
@@ -159,7 +158,6 @@ mod tests {
 
     #[test]
     fn test_load_tracks_from_csv() {
-        // Create a test CSV file
         let file_path = "test_data/test_data.csv";
         std::fs::create_dir_all("test_data").unwrap();
         let mut file = File::create(file_path).unwrap();
@@ -171,13 +169,11 @@ mod tests {
         writeln!(file, "1,Artist A,Album A,Song A,85,0.8,0.9,120.0,0.7").unwrap();
         writeln!(file, "2,Artist B,Album B,Song B,75,0.75,0.85,122.0,0.68").unwrap();
 
-        // Load the tracks
         let result = load_tracks_from_csv(file_path);
         assert!(result.is_ok(), "Failed to load tracks from CSV.");
         let tracks = result.unwrap();
         assert_eq!(tracks.len(), 2, "Expected 2 tracks in the CSV file.");
 
-        // Clean up
         std::fs::remove_file(file_path).unwrap();
         std::fs::remove_dir("test_data").unwrap();
     }
@@ -209,7 +205,7 @@ mod tests {
         };
 
         let tracks = vec![&track1, &track2];
-        let selected = select_track(&tracks, Some(1)); // Simulate selecting the first option
+        let selected = select_track(&tracks, Some(1));
         assert!(selected.is_some(), "No track was selected.");
         assert_eq!(
             selected.unwrap().track_name, "Song B",
@@ -335,7 +331,6 @@ mod tests {
         assert!(content.contains("\"Song A\""), "DOT file should contain 'Song A'");
         assert!(content.contains("\"Song B\""), "DOT file should contain 'Song B'");
 
-        // Cleanup
         std::fs::remove_file(dot_file_path).unwrap();
     }
 }
