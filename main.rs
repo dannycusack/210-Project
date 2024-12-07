@@ -4,6 +4,8 @@ use std::error::Error;
 use std::fs::File;
 use std::io::{stdin, Write};
 use csv::ReaderBuilder;
+#[cfg(test)]
+mod tests;
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 struct Track {
