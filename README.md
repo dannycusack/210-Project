@@ -5,10 +5,9 @@ For this project, I chose the Spotify Tracks Dataset off of Kaggle. This dataset
 
 How it works:
 After running the code using “cargo run”, it shows that it loaded all of the tracks from the dataset (114000). After this, it prompts you to input the name of a song. If the song is not in the dataset or a song name was inputted incorrectly, an error message appears. After inputting a song name, if there are multiple songs with the same name as the one inputted, it displays the top 3 songs based on popularity to choose from with artists. After choosing a song, it outputs a list of the top 5 similar songs to the inputted song. This list of songs is determined by variables, including the song’s danceability, energy, tempo, and valence. These variables are chosen within a threshold of 0.05 for danceability and energy, 50.0 for tempo (BPM), 0.1 for valence, and 70 for popularity. The graph is then exported to a graph.dot file where you can see a representation of these songs in an organized fashion, showing the details of each song. The songs are displayed as nodes, and the connections between them are displayed as edges.
-
 The code can be tested using "cargo test", testing all of the functions and making sure they do what they are suppose to do.
 
-Code explanation:
+**Code explanation:**
 I used different “use” statements in the beginning of my project for different purposes:
 
 use serde::{Deserialize, Serialize};
@@ -35,29 +34,30 @@ This allows the CSV reader to handle the columns and rows to the Track struct
 
 I used tested different functions to very the correctness of the project:
 
-Load_tracks_from_csv
+**Load_tracks_from_csv**
 This uses the csv crate to read the file and map each row in the CSV to the Track struct
 
-Select_track
+**Select_track**
 This sorts matching tracks by popularity, as well as displays the top 3 matches to the user and requires a selection and returns the track
 
-Find_similar_songs
+**Find_similar_songs**
 This iterates through the tracks of the dataset, compares the features of each track to the features of the inputted track, filters out duplicates, and returns a vector of the top matches
 
-Display_clean_subgraph
+**Display_clean_subgraph**
 This prints the inputted song’s details and iterates through the similar songs and prints their details
 
-Build_song_subgraph
+**Build_song_subgraph**
 This adds the inputted song as a node with its features and adds edges connecting the inputted song to the similar songs
 
-Export_subgraph_to_dot
+**Export_subgraph_to_dot**
 This writes notes and edges to the graph.dot file and includes song details
 
-Main
+**Main**
 The main function is used to load the dataset, ask for a song name, find the top 5 similar songs, and export the graph to graph.dot
 
 
-Example output:
+**Example output:**
+
 CARGO RUN
 Loaded 114000 tracks from the dataset.
 
@@ -88,7 +88,8 @@ Top 5 similar songs to "Animal" by Neon Trees [Danceability: 0.48, Energy: 0.83,
   
 Graph exported to 'graph.dot'.
 
-GRAPH
+**GRAPH**
+
 Graph.dot:
 
 graph {
@@ -100,7 +101,8 @@ graph {
     "Animal" -> "Self Esteem" [label="Danceability: 0.49, Energy: 0.86, Popularity: 77"];
 }
 
-CARGO TEST
+**CARGO TEST**
+
 running 5 tests
 test tests::tests::test_find_similar_songs ... ok
 test tests::tests::test_build_song_subgraph ... ok
