@@ -112,7 +112,7 @@ fn display_clean_subgraph(input_track: &Track, similar_songs: &[&Track]) {
             song.energy,
             song.tempo,
             song.valence,
-            song.popularity
+            song.popularity,
         );
     }
 }
@@ -120,7 +120,7 @@ fn display_clean_subgraph(input_track: &Track, similar_songs: &[&Track]) {
 fn build_song_subgraph<'a>(
     input_track: &'a Track,
     similar_songs: &[&'a Track],
-) -> HashMap<String, (String, Vec<(String, f32, f32, u32)>)> {
+) -> HashMap<String, (String, Vec<(String, f32, f32, f32, f32, u32)>)> {
     let mut graph = HashMap::new();
     graph.insert(
         input_track.track_name.clone(),
@@ -140,6 +140,8 @@ fn build_song_subgraph<'a>(
                         song.track_name.clone(),
                         song.danceability,
                         song.energy,
+                        song.tempo,
+                        song.valence,
                         song.popularity,
                     )
                 })
@@ -149,19 +151,20 @@ fn build_song_subgraph<'a>(
     graph
 }
 
+
 fn export_subgraph_to_dot(
-    graph: &HashMap<String, (String, Vec<(String, f32, f32, u32)>)>,
+    graph: &HashMap<String, (String, Vec<(String, f32, f32, f32, f32, u32)>)>,
     file_path: &str,
 ) -> std::io::Result<()> {
     let mut file = File::create(file_path)?;
     writeln!(file, "graph {{")?;
     for (node, (details, neighbors)) in graph {
         writeln!(file, "    \"{}\" [label=\"{}\"];", node, details)?;
-        for (neighbor, danceability, energy, popularity) in neighbors {
+        for (neighbor, danceability, energy, tempo, valence, popularity) in neighbors {
             writeln!(
                 file,
-                "    \"{}\" -> \"{}\" [label=\"Danceability: {:.2}, Energy: {:.2}, Popularity: {}\"];",
-                node, neighbor, danceability, energy, popularity
+                "    \"{}\" -> \"{}\" [label=\"Danceability: {:.2}, Energy: {:.2}, Tempo: {:.2}, Valence: {:.2}, Popularity: {}\"];",
+                node, neighbor, danceability, energy, tempo, valence, popularity
             )?;
         }
     }
