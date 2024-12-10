@@ -6,6 +6,8 @@ For this project, I chose the Spotify Tracks Dataset off of Kaggle. This dataset
 How it works:
 After running the code using “cargo run”, it shows that it loaded all of the tracks from the dataset (114000). After this, it prompts you to input the name of a song. If the song is not in the dataset or a song name was inputted incorrectly, an error message appears. After inputting a song name, if there are multiple songs with the same name as the one inputted, it displays the top 3 songs based on popularity to choose from with artists. After choosing a song, it outputs a list of the top 5 similar songs to the inputted song. This list of songs is determined by variables, including the song’s danceability, energy, tempo, and valence. These variables are chosen within a threshold of 0.05 for danceability and energy, 50.0 for tempo (BPM), 0.1 for valence, and 70 for popularity. The graph is then exported to a graph.dot file where you can see a representation of these songs in an organized fashion, showing the details of each song. The songs are displayed as nodes, and the connections between them are displayed as edges.
 
+The code can be tested using "cargo test", testing all of the functions and making sure they do what they are suppose to do.
+
 Code explanation:
 I used different “use” statements in the beginning of my project for different purposes:
 
