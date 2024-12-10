@@ -88,9 +88,7 @@ fn find_similar_songs<'a>(
             }
         }
     }
-
     similar_songs.sort_by(|a, b| b.popularity.cmp(&a.popularity));
-
     similar_songs
 }
 

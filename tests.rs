@@ -15,6 +15,7 @@ pub struct Track {
     pub tempo: f32,
     pub valence: f32,
 }
+
 #[cfg(test)]
 pub fn load_tracks_from_csv(file_path: &str) -> Result<Vec<Track>, Box<dyn Error>> {
     let mut rdr = csv::ReaderBuilder::new().has_headers(true).from_path(file_path)?;
@@ -25,6 +26,7 @@ pub fn load_tracks_from_csv(file_path: &str) -> Result<Vec<Track>, Box<dyn Error
     }
     Ok(tracks)
 }
+
 #[cfg(test)]
 pub fn select_track<'a>(tracks: &'a [&'a Track], user_input: Option<usize>) -> Option<&'a Track> {
     let mut sorted_tracks = tracks.to_vec();
@@ -63,6 +65,7 @@ pub fn select_track<'a>(tracks: &'a [&'a Track], user_input: Option<usize>) -> O
         }
     }
 }
+
 #[cfg(test)]
 pub fn find_similar_songs<'a>(
     tracks: &'a [Track],
@@ -89,11 +92,10 @@ pub fn find_similar_songs<'a>(
             }
         }
     }
-
     similar_songs.sort_by(|a, b| b.popularity.cmp(&a.popularity));
-
     similar_songs
 }
+
 #[cfg(test)]
 pub fn build_song_subgraph<'a>(
     input_track: &'a Track,
@@ -126,6 +128,7 @@ pub fn build_song_subgraph<'a>(
     );
     graph
 }
+
 #[cfg(test)]
 pub fn export_subgraph_to_dot(
     graph: &HashMap<String, (String, Vec<(String, f32, f32, u32)>)>,
@@ -253,7 +256,6 @@ mod tests {
 
         let tracks = vec![input_track.clone(), similar_track.clone(), dissimilar_track.clone()];
         let similar_songs = find_similar_songs(&tracks, &input_track, 0.05, 0.05, 5.0, 0.05, 70);
-
         assert_eq!(similar_songs.len(), 1, "Expected 1 similar song.");
         assert_eq!(
             similar_songs[0].track_name, "Song B",
@@ -288,7 +290,6 @@ mod tests {
         };
 
         let graph = build_song_subgraph(&input_track, &[&similar_track]);
-
         assert!(graph.contains_key("Song A"), "Graph should contain the input track.");
         let node = graph.get("Song A").unwrap();
         assert_eq!(node.1.len(), 1, "Expected 1 similar song in the graph.");
