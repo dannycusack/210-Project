@@ -7,6 +7,7 @@ use csv::ReaderBuilder;
 #[cfg(test)]
 mod tests;
 
+//represents a track from the dataset
 #[derive(Debug, Deserialize, Serialize, Clone)]
 struct Track {
     track_id: String,
@@ -19,17 +20,17 @@ struct Track {
     tempo: f32,
     valence: f32,
 }
-
+//loads tracks from CSV into a vector of Track structs
 fn load_tracks_from_csv(file_path: &str) -> Result<Vec<Track>, Box<dyn Error>> {
     let mut rdr = ReaderBuilder::new().has_headers(true).from_path(file_path)?;
     let mut tracks = Vec::new();
     for result in rdr.deserialize() {
         let record: Track = result?;
-        tracks.push(record);
+        tracks.push(record); //add track to vector
     }
     Ok(tracks)
 }
-
+//allows user to enter one track
 fn select_track<'a>(tracks: &'a [&'a Track]) -> Option<&'a Track> {
     let mut sorted_tracks = tracks.to_vec();
     sorted_tracks.sort_by(|a, b| b.popularity.cmp(&a.popularity));
@@ -53,7 +54,7 @@ fn select_track<'a>(tracks: &'a [&'a Track]) -> Option<&'a Track> {
     let mut selection = String::new();
     stdin().read_line(&mut selection).unwrap();
     let selection = selection.trim().parse::<usize>();
-
+    //return selected track, or None if input invalid
     match selection {
         Ok(num) if num > 0 && num <= top_tracks.len() => Some(top_tracks[num - 1]),
         _ => {
@@ -62,7 +63,7 @@ fn select_track<'a>(tracks: &'a [&'a Track]) -> Option<&'a Track> {
         }
     }
 }
-
+//find similar songs based on thresholds for track features
 fn find_similar_songs<'a>(
     tracks: &'a [Track],
     input_track: &Track,
@@ -74,7 +75,7 @@ fn find_similar_songs<'a>(
 ) -> Vec<&'a Track> {
     let mut similar_songs = Vec::new();
     let mut unique_names = HashSet::new();
-
+    //checks if track is similar based on thresholds
     for track in tracks {
         if (track.danceability - input_track.danceability).abs() <= danceability_threshold
             && (track.energy - input_track.energy).abs() <= energy_threshold
@@ -83,6 +84,7 @@ fn find_similar_songs<'a>(
             && track.popularity > popularity_threshold
             && track.track_id != input_track.track_id
         {
+            //avoids duplicates
             if unique_names.insert(track.track_name.clone()) {
                 similar_songs.push(track);
             }
@@ -91,7 +93,7 @@ fn find_similar_songs<'a>(
     similar_songs.sort_by(|a, b| b.popularity.cmp(&a.popularity));
     similar_songs
 }
-
+//displays input track and top 5 similar songs
 fn display_clean_subgraph(input_track: &Track, similar_songs: &[&Track]) {
     println!(
         "Top 5 similar songs to \"{}\" by {} [Danceability: {:.2}, Energy: {:.2}, Tempo: {:.2}, Valence: {:.2}, Popularity: {}]:",
@@ -116,7 +118,7 @@ fn display_clean_subgraph(input_track: &Track, similar_songs: &[&Track]) {
         );
     }
 }
-
+//builds graph representation of input track and similar songs
 fn build_song_subgraph<'a>(
     input_track: &'a Track,
     similar_songs: &[&'a Track],
@@ -151,7 +153,7 @@ fn build_song_subgraph<'a>(
     graph
 }
 
-
+//exports graph to DOT file
 fn export_subgraph_to_dot(
     graph: &HashMap<String, (String, Vec<(String, f32, f32, f32, f32, u32)>)>,
     file_path: &str,
@@ -176,6 +178,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let file_path = "spotify.csv";
     let tracks = load_tracks_from_csv(file_path)?;
     println!("Loaded {} tracks from the dataset.", tracks.len());
+    //thresholds
     let danceability_threshold = 0.05;
     let energy_threshold = 0.05;
     let tempo_threshold = 50.0;
@@ -185,7 +188,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut input_song = String::new();
     stdin().read_line(&mut input_song)?;
     let input_song = input_song.trim();
-
+    //tracks that match input song name
     let matching_tracks: Vec<_> = tracks
         .iter()
         .filter(|t| t.track_name.eq_ignore_ascii_case(input_song))
